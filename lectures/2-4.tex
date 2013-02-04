@@ -1,0 +1,68 @@
+%!TEX root = ../notes.tex
+\section{More on Decision Trees: Overfitting, Description Length, and Cross-Validation}
+
+Application: determining depth information from a single image.
+
+\paragraph{ID3} ID3 algorithm: number of bits yielded from a decision as we move down the tree.
+
+Observations about entropy: with a bernoulli R.V., the slopes are interesting. Deviations around 0 and 1 yield a large entropy difference, while deviations around .5 are not significant.
+
+ID3 tends to prefer extreme partitions, also prefers classifying larger subsets well.
+
+Note that ID3 is a greedy algorithm. Doesn't look ahead or backtrack. This could be annoying if there is a lot of interesting coupling, i.e. if there are a few attributes that taken together yield good information (\textbf{copredictors}).
+
+Decision trees can represent concepts with copredictors, but ID3 is not good at learning them. Must understand both the representation and the algorithm to understand behavior or learning framework.
+
+Consistent/inconsistent data: exactly the same features a second time with different data, is it possible to get different labels. Is there any label noise, or do we believe it 100\% of the time?
+
+Pure/impure data: All positive/all negative is pure (all the same label, independent of features), impure is mixed.
+
+\paragraph{Overfitting} Conjecture: if A has lower training error than B, it should generalize better to unseen instances. WRONG
+
+This is due to overfitting. At a certain point, we design the hypothesis too specifically to the training data, and the algorithm gets worse on test data.
+
+Two patterns in data: \textbf{true} patterns in domain, \textbf{spurious} patterns in training set (perhaps due to noise).
+
+At the beginning, ID3 has a large amount of data, tends to discover ``true'' patterns
+
+\paragraph{Dealing with Overfitting} Can be caused by:
+\begin{itemize}
+  \item Small training set
+  \item Non-deterministic domain (noisy/inconsistent data)
+  \item Many features
+  \item Weak inductive bias
+\end{itemize}
+
+Weaker inductive bias: Depends more on what you've seen than on what you expect. Algorithm more influenced by data, can more easily learn patterns, may overfit.
+
+Stronger inductive bias: More attention to hypothesis, less attention on data, focus on real signal. Possibility of underfitting.
+
+Increasing inductive bias:
+
+Restriction bias: Take some subset of hypothesis space under consideration, stick with that. Idea would be choosing hypotheses that are considered ``simple'' by some metric.
+
+Preference bias: rank the hypotheses in some sense. Rather than having a hard truncation, come up with a penalty that prefers shallower trees, or prefers lower order polynomials, or prefers coefficients closer to 0, etc.
+
+\paragraph{Preference bias in decision trees} 
+\begin{itemize}
+  \item Pre-pruning
+  \begin{itemize}
+    \item Prune the subtree before you grow it
+    \item Add termination condition to ID3
+  \end{itemize}
+  \item Post-pruning
+  \begin{itemize}
+    \item Grow complete tree, prune afterward
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Pre-pruning} How likely is it we'd see something this extreme under the null hypothesis? If we come up with a threshold at which if the p value is small, we reject the null hypothesis that something is spurious and accept it as actual signal.
+
+This is called \textbf{chi-squared pruning}. This plugs right into our greedy procedure (simple and fast). However, you have to tune the threshold (another parameter in the model), it also doesn't use much information.
+
+\paragraph{Pre-pruning} Generate and prune.
+
+\paragraph{Cross validation} Take a big data set, chop into partitions. Run algorithm 5 times (train on union of 4 folds, use each partition as test set).
+
+Common thing to do is 10-fold cross validation. At any given time, you get to see 90\% of the data.
+

@@ -1,0 +1,60 @@
+%!TEX root = ../notes.tex
+\section{January 30th}
+
+\subsection{Decision Trees}
+
+\paragraph{Loss Functions}
+% TODO: missing informatoin
+
+\paragraph{Decision Trees} Particular representation of a classifier. Node has attributes, edge has value of attribute, leaf has label prediction.
+
+How can we construct a `good' decision tree? Finding the best possible tree is NP-complete (iterating over all possible trees). Each decision partitions the data set. Data sets shrink exponentially quickly (if attributes are uniformly distributed).
+
+\paragraph{ID3 Algorithm} Given a set of data and attributes, which criterion should we use to split?
+% TODO: missing informatoin
+
+We need a quantitative measure of information. Shannon developed `Information Theory.'
+
+\paragraph{Information Content} If we have discrete random variable $X$ that takes $K$ possible values, the \textbf{information content} of outcome $x$ is given by:
+
+\[
+	I(x) = \log_2({1 \over p(x)})
+\]
+
+The units are \textbf{bits}. Imagine we have a message written with a four character alphabet? What is the best way to represent the message? If the distribution is uniform, we can represent each with two bits. 
+
+Information content: how much did my view of the world change when I observed this event?
+
+\paragraph{Shannon Entropy} is the expected information content under $p(x)$. Note: $\bbE$ refers to expectation:
+
+\[
+	H(x) = \bbE[I(x)] = \sum_x p(x) \log-2({1 \over p(x)})
+\]
+
+In the compression view, the entropy refers to the average code word length. With the four character alphabet, uniform distribution yields an entropy of 2. With the 1/2, 1/4, 1/8, 1/8 distribution, the entropy is 1.75.
+
+\paragraph{Specific Conditional Entropy} Considering two random variables $X$ and $Y$ given by $p(x,y)$. Then the \textbf{specific conditional entropy} is given by:
+
+%TODO: formula
+
+We can compute the marginal for $Y$:
+
+\[
+	p(Y) = \sum_x p(X,Y)
+\]
+
+We can find the \textbf{conditional entropy} %TODO
+
+
+\paragraph{Mutual Information} The number of bits we know about $X$ by knowing $Y$.
+
+\begin{align*}
+	I(X;Y) &= H(X) - H(X | Y) \\
+	&= \sum_{x,y} p(x,y) \log_2 {p(x,y) \over p(x) p(y)}
+\end{align*}
+
+Similar to correlation, but correlation is sort of limited. Just talks about linear dependencies.
+
+If we could compute the mutual information between each attribute and the label, we could maximize this. Problem: we don't know the true distribution. We have a set of discrete outcomes to compute distribution estimates though.
+
+\paragraph{Decision Forests} Collection of decision trees that are all helping to learn something. Kinect uses this to estimate player pose from depth information.
